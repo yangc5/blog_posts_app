@@ -1,5 +1,7 @@
 <form action="<%="/posts/#{@post.id}"%>" method="POST">
-  <input type="text" name="title" value="<%=@post.title%>">
-  <textarea name="content"><%=@post.content%></textarea>
-  <input type="submit" value="Post" id="post-update">
+  <div class="input-group">
+    <input type="text" name="title" value="<%=@post.title%>" class="form-control">
+    <textarea name="content" class="form-control"><%=@post.content%></textarea>
+    <input type="submit" value="Post" id="post-update" class="btn">
+  </div>
 </form>
