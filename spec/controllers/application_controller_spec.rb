@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pry'
 
 describe ApplicationController do
 
@@ -145,11 +146,44 @@ describe ApplicationController do
     end
   end
 
+  describe 'user index page' do
+    it 'displays all users' do
+      user1 = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
+      user2 = User.create(:username => "jenny", :email => "example@aol.com", :password => "dogs")
+      visit '/login'
+
+      params = {
+        :username => "becky567",
+        :password => "kittens"
+      }
+      post '/login', params
+      session = {}
+      session[:id] = user1.id
+
+      get "/users"
+
+      expect(last_response.body).to include("becky567")
+      expect(last_response.body).to include("jenny")
+    end
+  end
+
+
+
   describe 'user show page' do
     it 'shows all a single users posts' do
       user = User.create(:username => "becky567", :email => "starz@aol.com", :password => "kittens")
       post1 = Post.create(:title => 'post1', :content => "posting!", :user_id => user.id)
       post2 = Post.create(:title => 'post2', :content => "post post post", :user_id => user.id)
+      visit '/login'
+
+      params = {
+        :username => "becky567",
+        :password => "kittens"
+      }
+      post '/login', params
+      session = {}
+      session[:id] = user.id
+
       get "/users/#{user.slug}"
 
       expect(last_response.body).to include("posting!")

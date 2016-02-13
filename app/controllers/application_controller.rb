@@ -59,6 +59,39 @@ class ApplicationController < Sinatra::Base
     redirect '/login'
   end
 
+  get '/users' do
+    if Helpers.is_logged_in?(session)
+      @users = User.all
+      erb :'users/index'
+    else
+      redirect '/login'
+    end
+  end
+
+  get '/users/:slug' do
+    if Helpers.is_logged_in?(session)
+      @user = User.find_by_slug(params[:slug])
+      erb :'users/show'
+    else
+      redirect '/login'
+    end
+  end
+
+  get '/users/:slug/edit' do
+    if Helpers.is_logged_in?(session) && Helpers.current_user(session).id == User.find_by_slug(params[:slug]).id
+      @user = User.find_by_slug(params[:slug])
+      erb :'users/edit'
+    else
+      redirect '/login'
+    end
+  end
+
+  post '/users/:id' do
+    user = User.find(params[:id])
+    user.update(params)
+  end
+
+
   get '/posts' do
     if Helpers.is_logged_in?(session)
       @user = User.find(session[:id])

@@ -1,0 +1,6 @@
+<form class="edit_user" action="<%="/users/#{@user.id}"%>" method="post">
+  <input type="text" name="username" value="<%=@user.username%>">
+  <input type="email" name="email" value="<%=@user.email%>">
+  <input type="password" name="password" placeholder="New Password:">
+  <input type="submit" value="Update">
+</form>
