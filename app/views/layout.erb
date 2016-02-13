@@ -26,7 +26,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <!-- Main nav links -->
               <ul class="nav navbar-nav">
-                <li class="active" ><a href="/">Home</a></li>
+                <li><a href="/">Home</a></li>
                 <li><a href="/posts">Posts</a></li>
               </ul>
               <!-- Social nav links -->
@@ -50,3 +50,21 @@
     </div>
   </body>
 </html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script>
+
+$(document).ready(function(){
+  var url = document.location.href;
+  console.log(url);
+  var str = url.substr(0, url.lastIndexOf('/'));
+  console.log(str);
+  var tab = url.replace(str, '');
+  console.log(tab);
+
+  $('li a[href="' + tab + '"]').parent().addClass('active');
+
+});
+
+</script>
