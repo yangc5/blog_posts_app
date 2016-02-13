@@ -1,1 +1,5 @@
-<p>This is posts index page</p>
+<% @posts.each do |post| %>
+<h3><a href="<%="/posts/#{post.id}"%>"><%=post.title%></a></h3>
+<p>By <%=post.user.username%></p>
+<p><%=post.content%></p>
+<% end %>

@@ -12,6 +12,7 @@ class ApplicationController < Sinatra::Base
 
   get '/' do
     if Helpers.is_logged_in?(session)
+      @user = Helpers.current_user(session)
       erb :index
     else
       redirect '/login'
@@ -20,7 +21,7 @@ class ApplicationController < Sinatra::Base
 
   get '/login' do
     if Helpers.is_logged_in?(session)
-      redirect '/posts'
+      redirect '/'
     else
       erb :login
     end
@@ -38,7 +39,7 @@ class ApplicationController < Sinatra::Base
 
   get '/signup' do
     if Helpers.is_logged_in?(session)
-      redirect '/posts'
+      redirect '/'
     else
       erb :signup
     end
@@ -101,6 +102,75 @@ class ApplicationController < Sinatra::Base
       redirect '/login'
     end
   end
+
+  get '/posts/new' do
+    if Helpers.is_logged_in?(session)
+      erb :'posts/new'
+    else
+      redirect '/login'
+    end
+  end
+
+  post '/posts' do
+    post = Post.create(params)
+    if post.valid?
+      Helpers.current_user(session).posts << post
+      redirect '/posts'
+    else
+      redirect '/posts/new'
+    end
+  end
+
+  get '/posts/:id' do
+    if Helpers.is_logged_in?(session)
+      @post=Post.find(params[:id])
+      erb :'posts/show'
+    else
+      redirect '/login'
+    end
+  end
+
+  get '/posts/:id/edit' do
+    if Helpers.is_logged_in?(session)
+      begin
+        @post=Helpers.current_user(session).posts.find(params[:id])
+        erb :'posts/edit'
+      rescue ActiveRecord::RecordNotFound
+        redirect '/posts'
+      end
+    else
+      redirect '/login'
+    end
+  end
+
+  post '/posts/:id' do
+    begin
+      post=Helpers.current_user(session).posts.find(params[:id])
+      post.update(title: params[:title], content: params[:content])
+        if post.valid?
+          redirect '/posts'
+        else
+          redirect "/posts/#{post.id}/edit"
+        end
+    rescue ActiveRecord::RecordNotFound
+      redirect '/posts'
+    end
+
+  end
+
+
+  post '/posts/:id/delete' do
+    begin
+      post=Helpers.current_user(session).posts.find(params[:id])
+      post.destroy
+      redirect '/posts'
+    rescue ActiveRecord::RecordNotFound
+      redirect '/posts'
+    end
+
+  end
+
+
 
 
 
