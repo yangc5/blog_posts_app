@@ -23,7 +23,7 @@ describe "User" do
     expect(@user.password).to eq("validpw")
   end
 
-  it "has many tweets" do
+  it "has many posts" do
     @user.posts << @post1
     @user.posts << @post2
     expect(@user.posts).to include(@post1)
